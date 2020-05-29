@@ -6,11 +6,11 @@ RUN caddy-builder \
 
 FROM caddy:2
 
-COPY --from=builder /usr/bin/caddy /bin/caddy
+COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
 EXPOSE 2019 443 80
 ENV XDG_CONFIG_HOME=/config
 ENV XDG_DATA_HOME=/data
 
-ENTRYPOINT ["/bin/caddy"]
+ENTRYPOINT ["/usr/bin/caddy"]
 CMD ["docker-proxy"]
