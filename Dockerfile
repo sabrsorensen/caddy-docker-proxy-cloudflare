@@ -1,4 +1,15 @@
 FROM caddy:2-builder AS builder
+ARG BUILD_DATE
+ARG VCS_REF
+LABEL maintainer=825813+sabrsorensen@users.noreply.github.com \
+    org.label-schema.build-date=$BUILD_DATE \
+    org.label-schema.vcs-ref=$VCS_REF \
+    org.label-schema.vcs-url="https://github.com/sabrsorensen/caddy-docker-proxy-cloudflare.git"
+
+
+RUN apk add --no-cache \
+    gcc \
+    musl-dev
 
 RUN caddy-builder \
     github.com/lucaslorentz/caddy-docker-proxy/plugin/v2 \
