@@ -1,11 +1,9 @@
 FROM caddy:2-builder AS builder
-ARG BUILD_DATE
-ARG VCS_REF
-LABEL maintainer=825813+sabrsorensen@users.noreply.github.com \
-    org.label-schema.build-date=$BUILD_DATE \
-    org.label-schema.vcs-ref=$VCS_REF \
-    org.label-schema.vcs-url="https://github.com/sabrsorensen/caddy-docker-proxy-cloudflare.git"
 
+ARG BUILD_DATE="unknown"
+ARG COMMIT_AUTHOR="unknown"
+ARG VCS_REF="unknown"
+ARG VCS_URL="unknown"
 
 RUN apk add --no-cache \
     gcc \
@@ -16,6 +14,11 @@ RUN caddy-builder \
     github.com/caddy-dns/cloudflare
 
 FROM caddy:2
+
+LABEL maintainer=${COMMIT_AUTHOR} \
+    org.label-schema.vcs-ref=${VCS_REF} \
+    org.label-schema.vcs-url=${VCS_URL} \
+    org.label-schema.build-date=${BUILD_DATE}
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
