@@ -1,9 +1,16 @@
-FROM caddy:2-builder AS builder
+FROM caddy:2 as base
 
 ARG BUILD_DATE="unknown"
 ARG COMMIT_AUTHOR="unknown"
 ARG VCS_REF="unknown"
 ARG VCS_URL="unknown"
+
+LABEL maintainer=${COMMIT_AUTHOR} \
+    org.label-schema.vcs-ref=${VCS_REF} \
+    org.label-schema.vcs-url=${VCS_URL} \
+    org.label-schema.build-date=${BUILD_DATE}
+
+FROM caddy:2-builder AS builder
 
 RUN apk add --no-cache \
     gcc \
@@ -13,12 +20,7 @@ RUN caddy-builder \
     github.com/lucaslorentz/caddy-docker-proxy/plugin/v2 \
     github.com/caddy-dns/cloudflare
 
-FROM caddy:2
-
-LABEL maintainer=${COMMIT_AUTHOR} \
-    org.label-schema.vcs-ref=${VCS_REF} \
-    org.label-schema.vcs-url=${VCS_URL} \
-    org.label-schema.build-date=${BUILD_DATE}
+FROM base
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
