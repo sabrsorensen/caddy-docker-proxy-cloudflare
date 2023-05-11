@@ -1,0 +1,22 @@
+name: Build and push image
+on:
+  workflow_dispatch:
+  push:
+    paths-ignore:
+      - ".devcontainer/**"
+      - ".github/dependabot.yml"
+      - ".vscode/**"
+      - "LICENSE"
+      - "README.md"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and push image
+        run: .github/workflows/docker_build_and_push.sh

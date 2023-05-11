@@ -1,16 +1,26 @@
-FROM caddy:2 as base
+FROM caddy as base
 
 ARG BUILD_DATE="unknown"
 ARG COMMIT_AUTHOR="unknown"
 ARG VCS_REF="unknown"
 ARG VCS_URL="unknown"
+ARG CADDY_REF="unknown"
+ARG CADDY_BUILDER_REF="unknown"
+ARG DOCKER_PROXY_REF="unknown"
+ARG CADDY_CLOUDFLARE_REF="unkown"
+ARG FILTER_REF="unknown"
 
 LABEL maintainer=${COMMIT_AUTHOR} \
     org.label-schema.vcs-ref=${VCS_REF} \
     org.label-schema.vcs-url=${VCS_URL} \
-    org.label-schema.build-date=${BUILD_DATE}
+    org.label-schema.build-date=${BUILD_DATE} \
+    caddy_ref="${CADDY_REF}" \
+    caddy_builder_ref="${CADDY_BUILDER_REF}" \
+    docker_proxy_ref="${DOCKER_PROXY_REF}" \
+    caddy_cloudflare_ref="${CADDY_CLOUDFLARE_REF}" \
+    filter_ref="${FILTER_REF}"
 
-FROM caddy:2-builder AS builder
+FROM caddy:builder AS builder
 
 RUN apk add --no-cache \
     gcc \

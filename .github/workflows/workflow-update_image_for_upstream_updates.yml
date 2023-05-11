@@ -1,0 +1,34 @@
+name: Rebuild with upstream updates
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  check_versions:
+    runs-on: ubuntu-latest
+    outputs:
+      build: ${{ steps.check.outputs.build}}
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Check for upstream updates
+        id: check
+        run: bash .github/workflows/check_upstream_versions.sh
+
+  build:
+    runs-on: ubuntu-latest
+    needs: [check_versions]
+    if: ${{ needs.check_versions.outputs.build == 'true' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and push image
+        run: .github/workflows/docker_build_and_push.sh
