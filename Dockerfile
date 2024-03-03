@@ -29,6 +29,7 @@ RUN apk add --no-cache \
 RUN caddy-builder \
     github.com/lucaslorentz/caddy-docker-proxy/plugin/v2 \
     github.com/caddy-dns/cloudflare \
+    github.com/caddy-dns/porkbun \
     github.com/sjtug/caddy2-filter
 
 FROM base
